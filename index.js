@@ -26,7 +26,20 @@ async function run() {
             res.send(tools);
         });
 
+        // POST
+        app.post('/tool', async (req, res) => {
+            const newTool = req.body;
+            const result = await addToolCollection.insertOne(newTool);
+            res.send(result);
+        });
 
+        // DELETE
+        app.delete('/tool/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await addToolCollection.deleteOne(query);
+            res.send(result);
+        });
 
 
         app.get('/tool/:id', async (req, res) => {
