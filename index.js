@@ -9,7 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8v7rf.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -18,6 +17,7 @@ async function run() {
     try {
         await client.connect();
         const toolCollection = client.db('brushWaremag').collection('tool');
+        const addToolCollection = client.db('brushWaremag').collection('tool');
 
         app.get('/tool', async (req, res) => {
             const query = {};
@@ -25,12 +25,47 @@ async function run() {
             const tools = await cursor.toArray();
             res.send(tools);
         });
+
+
+
+
         app.get('/tool/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const tool = await toolCollection.findOne(query);
             res.send(tool);
         });
+
+        app.put('/tool/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedTool = Number(req.body.quantity)
+            console.log(id, updatedTool);
+            const filter = { _id: ObjectId(id) }
+
+            const updateDoc = {
+                $inc: {
+                    quantity: +updatedTool
+                }
+            };
+            const result = await toolCollection.updateOne(filter, updateDoc)
+            res.send(result)
+        });
+
+        app.put('/delivery/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const updateDoc = {
+                $inc: {
+                    quantity: -1
+                }
+            };
+            const result = await toolCollection.updateOne(filter, updateDoc)
+            res.send(result)
+        })
+
+
+
+
     }
     finally {
 
