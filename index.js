@@ -29,7 +29,7 @@ function verifyJWT(req, res, next) {
     });
 }
 
-/* const verifyAdmin = async (req, res, next) => {
+const verifyAdmin = async (req, res, next) => {
     const requester = req.decoded.email;
     const requesterAccount = await userCollection.findOne({ email: requester });
     if (requesterAccount.role === 'admin') {
@@ -38,7 +38,7 @@ function verifyJWT(req, res, next) {
     else {
         res.status(403).send({ message: 'forbidden' });
     }
-} */
+}
 
 
 async function run() {
