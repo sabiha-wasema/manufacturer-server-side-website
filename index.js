@@ -29,6 +29,17 @@ function verifyJWT(req, res, next) {
     });
 }
 
+/* const verifyAdmin = async (req, res, next) => {
+    const requester = req.decoded.email;
+    const requesterAccount = await userCollection.findOne({ email: requester });
+    if (requesterAccount.role === 'admin') {
+        next();
+    }
+    else {
+        res.status(403).send({ message: 'forbidden' });
+    }
+} */
+
 
 async function run() {
     try {
@@ -36,6 +47,7 @@ async function run() {
         const toolCollection = client.db('brushWaremag').collection('tool');
         const addToolCollection = client.db('brushWaremag').collection('tool');
         const userCollection = client.db('brushWaremag').collection('users');
+        const reviewCollection = client.db('brushWaremag').collection('reviews');
 
         app.get('/tool', async (req, res) => {
             const query = {};
@@ -48,6 +60,13 @@ async function run() {
         app.post('/tool', async (req, res) => {
             const newTool = req.body;
             const result = await addToolCollection.insertOne(newTool);
+            res.send(result);
+        });
+
+        // POST
+        app.post('/review', async (req, res) => {
+            const newReview = req.body;
+            const result = await reviewCollection.insertOne(newReview);
             res.send(result);
         });
 
