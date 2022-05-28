@@ -165,9 +165,11 @@ async function run() {
 run().catch(console.log)
 
 
-
-
 app.get('/', (req, res) => {
+    res.send('hello');
+})
+//testing
+app.get('/tools', (req, res) => {
     res.send('hello');
 })
 
